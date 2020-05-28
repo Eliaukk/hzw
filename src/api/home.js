@@ -17,3 +17,11 @@ export function getGroupReq() {
   })
 }
 
+export function getNewsList() {
+  return myAxios.get('/home/news', {
+    params: {
+      area: area
+    }
+  })
+}
+

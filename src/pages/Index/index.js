@@ -1,11 +1,11 @@
 import React from 'react'
 // 导入ant组件
-import { Carousel, Flex, Grid } from 'antd-mobile';
+import { Carousel, Flex, Grid, WingBlank } from 'antd-mobile';
 // 导入样式
-import './index.css'
+import './index.scss'
 import navbarList from '../../utils/navbarList'
 // 导入发送请求方法
-import { getSwiperaReq, getGroupReq } from '../../api/home'
+import { getSwiperaReq, getGroupReq, getNewsList } from '../../api/home'
 // 导入基准地址
 import { BASE_URL } from '../../utils/axios'
 
@@ -19,7 +19,10 @@ class Index extends React.Component {
     // 图片高度
     imgHeight: '212',
     // 租房小组数据
-    group: []
+    group: [],
+    // 资讯列表
+    news: []
+
   }
 
   // 获取小组数据
@@ -27,7 +30,7 @@ class Index extends React.Component {
     const res = await getGroupReq()
     console.log(res);
     this.setState({
-      group: res.body
+      group: res.data
     })
   }
 
@@ -45,11 +48,21 @@ class Index extends React.Component {
     })
   }
 
+  // 获取资讯
+  getNews = async () => {
+    const res = await getNewsList()
+
+    this.setState({
+      news: res.data
+    })
+  }
   componentDidMount() {
     // 获取轮播图
     this.getSwiper()
     // 获取渲染小组数据
     this.getGroupReq()
+    // 获取资讯
+    this.getNews()
   }
 
   // 轮播图组件
@@ -104,6 +117,27 @@ class Index extends React.Component {
     )
   }
 
+  //资讯组件
+  renderNews() {
+    return (
+      this.state.news.map(item => {
+        return (
+          <div className="news-item" key={item.id}>
+            <div className="imgWrap">
+              <img alt="" className="img" src={BASE_URL + item.imgSrc}></img>
+            </div>
+            <Flex className="content" direction="column" justify="between">
+              <h3 className="title">{item.title}</h3>
+              <Flex className="info" justify="between">
+                <span>{item.from}</span>
+                <span>{item.date}</span>
+              </Flex>
+            </Flex>
+          </div>
+        )
+      })
+    )
+  }
   render() {
     return (
       <div className="indexBox">
@@ -119,8 +153,36 @@ class Index extends React.Component {
             <h3>租房小组</h3>
             <span>更多</span>
           </Flex>
+
+          {/* 内容 */}
+          <Grid
+            data={this.state.group}
+            columnNum={2}
+            hasLine={false}
+            square={false}
+            onClick={() => {
+              this.props.history.push('/home')
+            }}
+            renderItem={dataItem => {
+              return (
+                <Flex className="grid-item" justify="between">
+                  <div className="desc">
+                    <h3>{dataItem.title}</h3>
+                    <p>{dataItem.desc}</p>
+                  </div>
+                  <img alt="" src={BASE_URL + dataItem.imgSrc} />
+                </Flex>
+              )
+            }}
+          />
         </div>
-        <Grid data={this.state.group} columnNum={3} itemStyle={{ height: '150px', background: 'rgba(0,0,0,.05)' }} />
+
+        {/* 最新资讯 */}
+        {/* 最新资讯 */}
+        <div className="news">
+          <h3 className="group-title">最新资讯</h3>
+          <WingBlank size="md">{this.renderNews()}</WingBlank>
+        </div>
       </div>
     );
   }
