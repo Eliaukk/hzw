@@ -3,22 +3,55 @@ import { Route } from 'react-router-dom'
 // 导入组件
 import Index from '../Index'
 import House from '../House'
-import Profile from '../Profile' 
+import Profile from '../Profile'
 
 // ant选项卡组件
 import { TabBar } from 'antd-mobile';
-
+import tabbarList from '../../utils/tabbarList'
 // 导入样式
 import './index.css'
 
 
+
 class Home extends React.Component {
+
+
   constructor(props) {
     super(props);
     this.state = {
       /**被选中的标签 */
       selectedTab: this.props.location.pathname,
     };
+  }
+
+  // tabbar组件
+  renderTabbar = () => {
+    return (
+      <TabBar
+        unselectedTintColor="#949494"
+        tintColor="#33A3F4"
+        barTintColor="white"
+        tabBarPosition="bottom"
+      >
+        {tabbarList.map(item => {
+          return (
+            <TabBar.Item
+              icon={<i className={`iconfont ${item.icon}`} ></i>}
+              selectedIcon={<i className={`iconfont ${item.icon}`} ></i>}
+              title={item.title}
+              key={item.id}
+              selected={this.state.selectedTab === item.path}
+              onPress={() => {
+                this.props.history.push(item.path)
+                this.setState({
+                  selectedTab: item.path,
+                });
+              }}
+            />
+          )
+        })}
+      </TabBar >
+    )
   }
 
   render() {
@@ -34,90 +67,8 @@ class Home extends React.Component {
 
         {/**tabBar组件 */}
         <div className='barBox'>
-        <TabBar
-          unselectedTintColor="#949494"
-          tintColor="#33A3F4"
-          barTintColor="white"
-          tabBarPosition="bottom"
-        >
-
-          <TabBar.Item
-            title="主页"
-            key="Life"
-            icon={
-              <i className="iconfont icon-ind"></i>
-            }
-            selectedIcon={<div style={{
-              width: '22px',
-              height: '22px',
-              background: 'url(https://zos.alipayobjects.com/rmsportal/iSrlOTqrKddqbOmlvUfq.svg) center center /  21px 21px no-repeat' }}
-            />
-            }
-            selected={this.state.selectedTab === '/home'}
-            onPress={() => {
-              this.props.history.push('/home')
-              this.setState({
-                selectedTab: 'blueTab',
-              });
-            }}
-            data-seed="logId"
-          />
-
-          <TabBar.Item
-            icon={
-              <div style={{
-                width: '22px',
-                height: '22px',
-                background: 'url(https://gw.alipayobjects.com/zos/rmsportal/BTSsmHkPsQSPTktcXyTV.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            selectedIcon={
-              <div style={{
-                width: '22px',
-                height: '22px',
-                background: 'url(https://gw.alipayobjects.com/zos/rmsportal/ekLecvKBnRazVLXbWOnE.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            title="列表找房"
-            key="Koubei"
-            selected={this.state.selectedTab === '/home/house'}
-            onPress={() => {
-              this.props.history.push('/home/house')
-              this.setState({
-                selectedTab: 'redTab',
-              });
-            }}
-            data-seed="logId1"
-          />
-
-          <TabBar.Item
-            icon={
-              <div style={{
-                width: '22px',
-                height: '22px',
-                background: 'url(https://zos.alipayobjects.com/rmsportal/psUFoAMjkCcjqtUCNPxB.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            selectedIcon={
-              <div style={{
-                width: '22px',
-                height: '22px',
-                background: 'url(https://zos.alipayobjects.com/rmsportal/IIRLrXXrFAhXVdhMWgUI.svg) center center /  21px 21px no-repeat' }}
-              />
-            }
-            title="我的"
-            key="Friend"
-            selected={this.state.selectedTab === '/home/profile'}
-            onPress={() => {
-              this.props.history.push('/home/profile')
-              this.setState({
-                selectedTab: 'greenTab',
-              });
-            }}
-          />
-
-        </TabBar>
-      </div>
+          {this.renderTabbar()}
+        </div>
       </div>
     );
   }

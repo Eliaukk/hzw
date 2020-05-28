@@ -8,7 +8,9 @@ class Index extends React.Component {
 
   render() {
     return (
-      <div>这是首页</div>
+      <div>
+        主页组件
+      </div>
     )
   }
 }

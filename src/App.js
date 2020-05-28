@@ -1,6 +1,6 @@
 import React from 'react';
 // 导入路由组件
-import {BrowserRouter  as Router,Route,Link,Switch ,Redirect} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 // 导入组件
 import Home from './pages/Home'
 import CityList from './pages/CityList'
@@ -10,7 +10,7 @@ import NotFound from './pages/NotFound'
 function App() {
   return (
     <Router>
-       {/**路由跟组件 */}
+      {/**路由跟组件 */}
       <div className="App">
         {/**<Link to="/home">首页</Link>
         <Link to="/citylist">城市列表</Link>
@@ -19,7 +19,7 @@ function App() {
 
         <Switch>
           {/**路由重定向到首页*/}
-          <Route exact path='/' render={()=><Redirect  to='/home'/>}></Route>
+          <Route exact path='/' render={() => <Redirect to='/home' />}></Route>
           {/**首页*/}
           <Route path="/home" component={Home}></Route>
           {/**城市列表*/}
