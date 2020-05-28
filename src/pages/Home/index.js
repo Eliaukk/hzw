@@ -9,12 +9,11 @@ import Profile from '../Profile'
 import { TabBar } from 'antd-mobile';
 import tabbarList from '../../utils/tabbarList'
 // 导入样式
-import './index.css'
+import './index.scss'
 
 
 
 class Home extends React.Component {
-
 
   constructor(props) {
     super(props);
@@ -54,9 +53,15 @@ class Home extends React.Component {
     )
   }
 
+
+  renderGrid = () => {
+
+  }
+
   render() {
     return (
       <div className='home'>
+
         {/**二级路由配置 */}
         {/**首页组件 */}
         <Route exact path='/home' component={Index}></Route>
@@ -69,6 +74,7 @@ class Home extends React.Component {
         <div className='barBox'>
           {this.renderTabbar()}
         </div>
+
       </div>
     );
   }

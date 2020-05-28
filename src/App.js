@@ -17,6 +17,7 @@ function App() {
         <Link to="/map">地图</Link> */}
         {/**一级路由组件 */}
 
+
         <Switch>
           {/**路由重定向到首页*/}
           <Route exact path='/' render={() => <Redirect to='/home' />}></Route>
