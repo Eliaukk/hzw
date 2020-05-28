@@ -1,0 +1,6 @@
+/* tabBar样式 */
+.barBox {
+  position: fixed; 
+  width: 100%; 
+  bottom: 0;
+}
