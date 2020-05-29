@@ -33,7 +33,7 @@ class Index extends React.Component {
 
 
   async  renderAll() {
-    // 执行首页三个异步请求
+    // 执行首页所有异步请求获取数据
     const [Swiper, Group, News] = await Promise.all([getSwiperaReq(), getGroupReq(), getNewsList()])
     if (Swiper.status === 200) {
       // 更新state数据
