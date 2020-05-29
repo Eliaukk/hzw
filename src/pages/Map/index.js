@@ -22,10 +22,10 @@ class Map extends React.Component {
     const point = new BMap.Point(116.404, 39.915);
     // 地图初始化
     map.centerAndZoom(point, 15);
-    // var map = new window.BMapGL.Map("container");
-    // var point = new window.BMapGL.Point(116.404, 39.915);
-    // map.centerAndZoom(point, 15);
+    return map
   }
+
+
 
 
   render() {

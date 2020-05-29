@@ -6,6 +6,7 @@ import './index.scss'
 import navbarList from '../../utils/navbarList'
 // 导入发送请求方法
 import { getSwiperaReq, getGroupReq, getNewsList } from '../../api/home'
+import { getCurCityReq } from '../../api/citylist'
 // 导入基准地址
 import { BASE_URL } from '../../utils/axios'
 
@@ -21,32 +22,63 @@ class Index extends React.Component {
     // 租房小组数据
     group: [],
     // 资讯列表
-    news: []
+    news: [],
+    // 城市信息
+    city: {
+      label: '',
+      value: ''
+    }
 
   }
 
-
+  // 获取当前定位
+  getCurCity() {
+    const { BMap } = window
+    // 生成定位信息
+    const myCity = new BMap.LocalCity();
+    // 获取当前城市
+    myCity.get(async ({ name }) => {
+      // 前后交互获取城市信息
+      const { data: { label, value } } = await getCurCityReq(name)
+      // 更新数据
+      this.setState({
+        city: {
+          label, value
+        }
+      }, () => {
+        // areaID更新完成，执行所有异步请求
+        const area = this.state.city.value
+        this.renderAll(area)
+      })
+    });
+  }
 
   componentDidMount() {
-    this.renderAll()
+    // 获取当前城市数据
+    this.getCurCity()
   }
 
 
-  async  renderAll() {
+  async  renderAll(area) {
     // 执行首页所有异步请求获取数据
-    const [Swiper, Group, News] = await Promise.all([getSwiperaReq(), getGroupReq(), getNewsList()])
-    if (Swiper.status === 200) {
-      // 更新state数据
-      this.setState({
-        data: Swiper.data,
-        group: Group.data,
-        news: News.data
-      }, () => {
-        // 打开自动播放
+    try {
+      const [Swiper, Group, News] = await Promise.all([getSwiperaReq(), getGroupReq(area), getNewsList(area)])
+      if (Swiper.status === 200) {
+        // 更新state数据
         this.setState({
-          autoplay: true
+          data: Swiper.data,
+          group: Group.data,
+          news: News.data
+        }, () => {
+          // 打开自动播放
+          this.setState({
+            autoplay: true
+          })
         })
-      })
+      }
+    } catch (err) {
+      // 捕获错误
+      console.dir(new Error(err));
     }
   }
 
@@ -163,8 +195,8 @@ class Index extends React.Component {
       <Flex justify="around" className="topNav">
         <div className="searchBox">
           {/* 搜索框左侧按钮 */}
-          <div className="city">
-            北京<i className="iconfont icon-arrow"></i>
+          <div className="city" onClick={() => { this.props.history.push('/citylist') }}>
+            {this.state.city.label}<i className="iconfont icon-arrow"></i>
           </div>
           {/* 搜索组件 */}
           <SearchBar placeholder="请输入小区或地址"></SearchBar>
@@ -182,6 +214,7 @@ class Index extends React.Component {
       <div className="indexBox">
         {/* 导航栏 */}
         {this.renderTopNav()}
+
         {/* 轮播图 */}
         {this.renderSwiper()}
 

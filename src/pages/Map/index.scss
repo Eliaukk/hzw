@@ -2,3 +2,8 @@
 html,body,#root,.App,.mapBox,#container{
   height: 100%;
 }
+.mapBox .am-navbar {
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+}

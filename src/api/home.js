@@ -6,21 +6,20 @@ export function getSwiperaReq() {
   return myAxios.get('/home/swiper')
 }
 
-
-const area = 'AREA|88cff55c-aaa4-e2e0'
 // 获取租房小组
-export function getGroupReq() {
+export function getGroupReq(area) {
   return myAxios.get('/home/groups', {
     params: {
-      area: area
+      area
     }
   })
 }
 
-export function getNewsList() {
+// 获取新闻列表
+export function getNewsList(level) {
   return myAxios.get('/home/news', {
     params: {
-      area: area
+      level
     }
   })
 }

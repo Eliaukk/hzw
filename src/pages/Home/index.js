@@ -54,10 +54,6 @@ class Home extends React.Component {
   }
 
 
-  renderGrid = () => {
-
-  }
-
   render() {
     return (
       <div className='home'>
