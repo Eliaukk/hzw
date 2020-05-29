@@ -1,6 +1,9 @@
 import React from 'react'
 // 引入样式
 import './index.scss'
+
+// 引入组件
+import { NavBar, Icon } from 'antd-mobile'
 class Map extends React.Component {
 
   state = {
@@ -23,10 +26,17 @@ class Map extends React.Component {
     // var point = new window.BMapGL.Point(116.404, 39.915);
     // map.centerAndZoom(point, 15);
   }
+
+
   render() {
 
     return (
       <div className="mapBox">
+        <NavBar
+          mode="dark"
+          icon={<Icon type="left" />}
+          onLeftClick={() => console.log(this.props.history.goBack())}
+        >地图</NavBar>
         <div id="container"></div>
       </div>
     )
