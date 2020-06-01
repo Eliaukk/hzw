@@ -14,3 +14,8 @@ export function getCurCityListReq(level) {
     params: { level }
   })
 }
+
+// 获取热门城市
+export function getHotCityReq(level) {
+  return myAxios.get('/area/hot')
+}

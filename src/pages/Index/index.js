@@ -1,4 +1,5 @@
 import React from 'react'
+import { getCurCityUtils } from '../../utils'
 // 导入ant组件
 import { Carousel, Flex, Grid, WingBlank, SearchBar } from 'antd-mobile';
 // 导入样式
@@ -6,7 +7,6 @@ import './index.scss'
 import navbarList from '../../utils/navbarList'
 // 导入发送请求方法
 import { getSwiperaReq, getGroupReq, getNewsList } from '../../api/home'
-import { getCurCityReq } from '../../api/citylist'
 // 导入基准地址
 import { BASE_URL } from '../../utils/axios'
 
@@ -32,26 +32,20 @@ class Index extends React.Component {
   }
 
   // 获取当前定位
-  getCurCity() {
-    const { BMap } = window
-    // 生成定位信息
-    const myCity = new BMap.LocalCity();
-    // 获取当前城市
-    myCity.get(async ({ name }) => {
-      // 前后交互获取城市信息
-      const { data: { label, value } } = await getCurCityReq(name)
-      // 更新数据
-      this.setState({
-        city: {
-          label, value
-        }
-      }, () => {
-        // areaID更新完成，执行所有异步请求
-        const area = this.state.city.value
-        this.renderAll(area)
-      })
-    });
+  async getCurCity() {
+    const { label, value } = await getCurCityUtils()
+    // 更新state数据
+    this.setState({
+      city: {
+        label, value
+      }
+    }, () => {
+      // areaID更新完成，执行所有异步请求
+      const area = this.state.city.value
+      this.renderAll(area)
+    })
   }
+
 
   componentDidMount() {
     // 获取当前城市数据
