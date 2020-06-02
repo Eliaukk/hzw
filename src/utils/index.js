@@ -22,7 +22,6 @@ export function getCurCityUtils() {
   // 先判断本地有没有定位数据
   const curCity = getAuth('curCity')
 
-
   if (!curCity) {
     // 如果本地没有定位数据 返回一个Promise对象
     return new Promise(resolve => {
@@ -39,6 +38,7 @@ export function getCurCityUtils() {
         resolve(data)
       });
     })
+
   } else {
     // 如果有就返回本地的数据
     return Promise.resolve(curCity)

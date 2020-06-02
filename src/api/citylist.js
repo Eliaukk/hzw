@@ -8,7 +8,7 @@ export function getCurCityReq(name) {
   })
 }
 
-// 获取城市列表数据
+// 获取当前城市列表数据
 export function getCurCityListReq(level) {
   return myAxios.get('/area/city', {
     params: { level }

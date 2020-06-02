@@ -166,7 +166,7 @@ class CityList extends React.Component {
               const { activeIndex } = this.state
               if (startIndex !== activeIndex)
                 this.setState({
-                  activeIndex: startIndex + 1
+                  activeIndex: startIndex
                 })
             }}
             height={height}

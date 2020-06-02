@@ -1,6 +1,6 @@
 import React from 'react';
 // 导入路由组件
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 // 导入组件
 import Home from './pages/Home'
 import CityList from './pages/CityList'

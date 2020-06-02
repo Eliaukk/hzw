@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Toast } from 'antd-mobile'
 
 // 基准地址
-export const BASE_URL = 'http://api-haoke-dev.itheima.net'
+export const BASE_URL = 'https://api-haoke-web.itheima.net'
 
 // 创建axios实例并进行配置
 const request = axios.create({
