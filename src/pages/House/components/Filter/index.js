@@ -4,6 +4,11 @@ import FilterTitle from '../FilterTitle'
 import FilterPicker from '../FilterPicker'
 import FilterMore from '../FilterMore'
 
+// 获取当前城市信息
+import { getCurCityUtils } from '../../../../utils/index'
+// 获取筛选数据
+import { getFilterDataReq } from '../../../../api/house'
+
 import styles from './index.module.css'
 
 
@@ -15,12 +20,21 @@ const titleSelectStatus = {
   more: false
 }
 
+const selectedValue = {
+  area: ['area', 'null'],
+  mode: ['null'],
+  price: ['null'],
+  more: []
+}
 export default class Filter extends Component {
+  // 用来保存筛选数据  传入默认值
+  selectedValue = { ...selectedValue }
 
   // 定义状态数据
   state = {
     titleSelectStatus: { ...titleSelectStatus },
-    openType: ''
+    openType: '',
+    area: {}
   }
   // 修改status状态
   hTitleClick = (type) => {
@@ -52,7 +66,13 @@ export default class Filter extends Component {
   }
 
   // 点击ok按钮
-  hOk = () => {
+  hOk = (val, openType) => {
+    // 保存筛选数据
+    this.selectedValue[openType] = val
+    console.log(this.selectedValue);
+
+    // 更新选中的数据
+
     this.setState({
       openType: ''
     })
@@ -63,6 +83,48 @@ export default class Filter extends Component {
     this.setState({
       openType: ''
     })
+  }
+
+  // 渲染筛选器
+  renderPicker = (openType) => {
+    // 判断是否为前三个
+    if (this.isShowPicker()) {
+
+      let data, col = 1
+      const { area, subway, rentType, price } = this.filterData;
+      switch (openType) {
+        case 'area':
+          data = [area, subway]
+          col = 3;
+          break;
+        case 'mode':
+          data = rentType
+          col = 1;
+          break;
+        case 'price':
+          data = price
+          col = 1;
+          break;
+        default:
+      }
+
+      return (
+        // selectedValue是赛选条件数据
+        <FilterPicker selectedValue={this.selectedValue[openType]} openType={openType} data={data} col={col} hOk={this.hOk} hCancel={this.hCancel} />
+      )
+    } else {
+      return null
+    }
+
+  }
+  componentDidMount() {
+    this.getFilterData()
+  }
+  // 获取筛选数据
+  getFilterData = async () => {
+    const { value } = await getCurCityUtils()
+    const { data } = await getFilterDataReq(value)
+    this.filterData = data
   }
   render() {
     const { titleSelectStatus, openType } = this.state
@@ -77,7 +139,7 @@ export default class Filter extends Component {
           <FilterTitle titleSelectStatus={titleSelectStatus} hTitleClick={this.hTitleClick} />
 
           {/* 前三个菜单对应的内容： */}
-          {this.isShowPicker() ? <FilterPicker opentype={openType} hOk={this.hOk} hCancel={this.hCancel} /> : null}
+          {this.renderPicker(openType)}
 
 
           {/* 最后一个菜单对应的内容： */}
