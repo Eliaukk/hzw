@@ -20,7 +20,8 @@ const titleSelectStatus = {
   more: false
 }
 
-const selectedValue = {
+// 筛选条件数据
+let selectedValue = {
   area: ['area', 'null'],
   mode: ['null'],
   price: ['null'],
@@ -32,24 +33,24 @@ export default class Filter extends Component {
 
   // 定义状态数据
   state = {
+    // 筛选器标题的激活状态
     titleSelectStatus: { ...titleSelectStatus },
-    openType: '',
-    area: {}
+    // 当前筛选器类型
+    openType: ''
   }
-  // 修改status状态
-  hTitleClick = (type) => {
 
+  // 点击标题
+  hTitleClick = (type) => {
+    const newSeclectedStatus = this.judgeSelectedStatus()
 
     // 判断是否为前三个菜单
-    if (type === 'more') {
+    if (type !== 'more') {
       this.setState({
-        titleSelectStatus: {
-          ...titleSelectStatus
-        },
-        openType: type
+        openType: type,
+        titleSelectStatus: { ...newSeclectedStatus }
       })
     } else {
-      // 更新state标题每项选中状态
+      // 点击最后一个筛选器  屏蔽前面三个筛选状态
       this.setState({
         titleSelectStatus: { ...titleSelectStatus, [type]: true },
         openType: type
@@ -57,6 +58,46 @@ export default class Filter extends Component {
     }
 
   }
+
+
+  // 根据筛选器中数据 判断所有筛选器标题的激活状态
+  judgeSelectedStatus = () => {
+    // 业务功能：
+    // 1.获取所有筛选器中的条件数据
+    // - 在area筛选器中,第二个条件不为空，或者第一个条件为地铁 则该标题为激活状态
+    // - 在mode、price中，数据不为空则为激活状态
+    // - 在more中，长度不为0则处于激活状态
+
+    // 新的标题状态变量
+    let newTitleSelectStatus = {}
+
+    // 遍历筛选数据
+    Object.keys(this.selectedValue).forEach(key => {
+      // 获取当前值
+      let cur = this.selectedValue[key]
+
+      if ((key === 'area') && (cur[1] !== 'null' || cur[0] === 'subway')) {
+        // area为选中状态
+        newTitleSelectStatus.area = true
+      } else if (key === 'mode' && cur[0] !== 'null') {
+        // mode为选中状态
+        newTitleSelectStatus.mode = true
+      } else if (key === 'price' && cur[0] !== 'null') {
+        // price为选中状态
+        newTitleSelectStatus.price = true
+      } else if (key === 'more' && cur.length !== 0) {
+        // more为选中状态
+        newTitleSelectStatus.more = true
+      } else {
+        // 不符合要求就关闭激活状态
+        newTitleSelectStatus[key] = false
+      }
+    })
+
+    // 返回新标题选中状态
+    return newTitleSelectStatus
+  }
+
 
   // 当前打开状态
   isShowPicker = () => {
@@ -69,22 +110,62 @@ export default class Filter extends Component {
   hOk = (val, openType) => {
     // 保存筛选数据
     this.selectedValue[openType] = val
-    console.log(this.selectedValue);
-
+    // 获取新标题选中状态
+    const newTitleSelectedStatus = this.judgeSelectedStatus()
+    // console.log(this.selectedValue);
+    this.getFilterParams()
     // 更新选中的数据
-
     this.setState({
-      openType: ''
+      openType: '',
+      titleSelectStatus: { ...newTitleSelectedStatus }
     })
   }
 
   // 点击取消按钮
-  hCancel = () => {
+  hCancel = (type) => {
+
+    this.selectedValue.more = []
+    console.log('点击取消按钮', type, this.selectedValue.more);
+
+    // 获取新标题选中状态
+    const newTitleSelectedStatus = this.judgeSelectedStatus()
+    console.log(newTitleSelectedStatus);
     this.setState({
-      openType: ''
+      openType: '',
+      titleSelectStatus: { ...newTitleSelectedStatus }
     })
   }
 
+
+  // 获取筛选器参数
+  getFilterParams = () => {
+    // 用来保存请求参数
+    let paramsData = {}
+    const { area, mode, price, more } = this.selectedValue
+    console.log(area, mode, price, more);
+    let akey = area[0], aval;
+    if (area.length === 2) {
+      aval = area[1]
+    } else {
+      if (area[2] === 'null') {
+        aval = area[1]
+      } else {
+        aval = area[2]
+      }
+    }
+    // 设置area中数据
+    paramsData[akey] = aval
+    // 设置renType数据
+    paramsData.rentType = mode[0]
+    // 设置租金数据
+    paramsData.price = price[0]
+    paramsData.more = more.join(',')
+    // 返回处理后数据
+    console.log(paramsData);
+
+    return paramsData
+
+  }
   // 渲染筛选器
   renderPicker = (openType) => {
     // 判断是否为前三个
@@ -110,22 +191,29 @@ export default class Filter extends Component {
 
       return (
         // selectedValue是赛选条件数据
-        <FilterPicker selectedValue={this.selectedValue[openType]} openType={openType} data={data} col={col} hOk={this.hOk} hCancel={this.hCancel} />
+        <FilterPicker key={openType} selectedValue={this.selectedValue[openType]} openType={openType} data={data} col={col} hOk={this.hOk} hCancel={this.hCancel} />
       )
     } else {
       return null
     }
 
   }
+
   componentDidMount() {
+    // 获取筛选器中的数据
     this.getFilterData()
   }
-  // 获取筛选数据
+
+
+  //访问接口 获取筛选条件
   getFilterData = async () => {
     const { value } = await getCurCityUtils()
     const { data } = await getFilterDataReq(value)
     this.filterData = data
+    console.log(data);
+
   }
+
   render() {
     const { titleSelectStatus, openType } = this.state
     return (
@@ -143,7 +231,7 @@ export default class Filter extends Component {
 
 
           {/* 最后一个菜单对应的内容： */}
-          {/* <FilterMore /> */}
+          {openType === 'more' ? <FilterMore data={this.filterData} selectedValue={this.selectedValue.more} hOk={this.hOk} hCancel={this.hOk} /> : ''}
         </div>
       </div>
     )
