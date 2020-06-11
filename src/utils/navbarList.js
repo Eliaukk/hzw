@@ -20,13 +20,13 @@ const navbar = [
     id: 3,
     title: '地图找房',
     img: nav3,
-    path: '/home'
+    path: '/map'
   },
   {
     id: 4,
     title: '发布房源',
     img: nav4,
-    path: '/home'
+    path: '/rent/add'
   },
 ]
 

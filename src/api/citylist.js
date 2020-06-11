@@ -19,3 +19,13 @@ export function getCurCityListReq(level) {
 export function getHotCityReq(level) {
   return myAxios.get('/area/hot')
 }
+
+
+// 查询房源数据
+export function getHouseDataReq(id) {
+  return myAxios.get('/area/map', {
+    params: {
+      id
+    }
+  })
+}

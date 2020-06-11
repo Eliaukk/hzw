@@ -16,7 +16,7 @@ const tabbarList = [
     id: 3,
     title: '我的',
     icon: 'icon-my',
-    path: '/home/my'
+    path: '/home/profile'
   },
 ]
 

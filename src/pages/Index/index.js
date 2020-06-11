@@ -10,7 +10,7 @@ import { getSwiperaReq, getGroupReq, getNewsList } from '../../api/home'
 // 导入基准地址
 import { BASE_URL } from '../../utils/axios'
 
-
+import { getAuthInfoReq } from '../../api/profile'
 class Index extends React.Component {
   state = {
     // 轮播图数据
@@ -149,14 +149,18 @@ class Index extends React.Component {
       })
     )
   }
+  test = async () => {
+    const data = await getAuthInfoReq()
+    console.log(data);
 
+  }
   // 租房小组
   renderGroup() {
     return (
       <>
         <Flex className="group-title" justify="between">
           <h3>租房小组</h3>
-          <span>更多</span>
+          <span onClick={this.test}>更多</span>
         </Flex>
         {/* 内容 */}
         <Grid
@@ -219,7 +223,6 @@ class Index extends React.Component {
         <div className="group">
           {this.renderGroup()}
         </div>
-
         {/* 最新资讯 */}
         <div className="news">
           <h3 className="group-title">最新资讯</h3>

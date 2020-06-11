@@ -4,7 +4,7 @@ import { getCurCityReq } from '../api/citylist'
 // 用于操作本地存储的方法
 // 获取本地存储
 export function getAuth(key) {
-  return JSON.parse(window.localStorage.getItem(key))
+  return JSON.parse(window.localStorage.getItem(key)) || {}
 }
 // 添加本地存储
 export function setAuth(key, val) {

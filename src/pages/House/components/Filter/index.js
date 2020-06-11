@@ -41,6 +41,7 @@ export default class Filter extends Component {
 
   // 点击标题
   hTitleClick = (type) => {
+    // 获取当前所有删选器的状态
     const newSeclectedStatus = this.judgeSelectedStatus()
 
     // 判断是否为前三个菜单
@@ -113,7 +114,10 @@ export default class Filter extends Component {
     // 获取新标题选中状态
     const newTitleSelectedStatus = this.judgeSelectedStatus()
     // console.log(this.selectedValue);
-    this.getFilterParams()
+    // 获取筛选的条件
+    const filterDate = this.getFilterParams()
+    // 将筛选条件传给父组件
+    this.props.onFilters(filterDate)
     // 更新选中的数据
     this.setState({
       openType: '',
@@ -166,6 +170,7 @@ export default class Filter extends Component {
     return paramsData
 
   }
+
   // 渲染筛选器
   renderPicker = (openType) => {
     // 判断是否为前三个
@@ -202,16 +207,18 @@ export default class Filter extends Component {
   componentDidMount() {
     // 获取筛选器中的数据
     this.getFilterData()
+
   }
 
 
   //访问接口 获取筛选条件
   getFilterData = async () => {
+    // 获取当前城市id
     const { value } = await getCurCityUtils()
+    // 获取所有筛选器的数据
     const { data } = await getFilterDataReq(value)
+    // 将数据挂载到实例上
     this.filterData = data
-    console.log(data);
-
   }
 
   render() {

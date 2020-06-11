@@ -48,7 +48,7 @@ export default class FilterMore extends Component {
       data.map(item => {
         let cut = item.label
         return (
-          <span key={item.value} onClick={() => { this.hMoreSelectedValue(cut) }} className={[styles.tag, this.isShow(cut)].join(' ')}>{cut}</span>
+          <span key={item.value} onClick={() => { this.hMoreSelectedValue(item.value) }} className={[styles.tag, this.isShow(item.value)].join(' ')}>{cut}</span>
         )
       })
     )
